@@ -1,7 +1,6 @@
 package jieba
 
 import (
-	"fmt"
 	"github.com/yanyiwu/gojieba"
 	"strings"
 	"sync"
@@ -31,10 +30,8 @@ func (j *jieba) Cut(str string) [][]string {
 	for _, wordInfo := range wordInfoList {
 		wordAndPos := strings.Split(wordInfo, "/")
 		if len(wordAndPos) <= 1 || utf8.RuneCountInString(wordAndPos[0]) <= 1 {
-			fmt.Println("filtered word: ", wordAndPos[0])
 			continue
 		}
-		fmt.Println("remains word: ", wordAndPos[0])
 
 		wordAndPosList = append(wordAndPosList, wordAndPos)
 	}

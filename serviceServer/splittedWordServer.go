@@ -2,11 +2,9 @@ package serviceServer
 
 import (
 	"context"
-	"fmt"
 	"github.com/Diode222/Mimiron/jieba"
 	pb "github.com/Diode222/Mimiron/proto_gen"
 	"github.com/Diode222/Mimiron/utils"
-	"log"
 	"strings"
 	"sync"
 )
@@ -24,9 +22,6 @@ func NewWordSplitServer() *wordSplitServer {
 }
 
 func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, list *pb.ChatMessageList) (*pb.ChatMessageList, error) {
-
-	log.Println("mimiron GetWordSplittedMessageList, chatMessageList length: ", len(list.GetChatMessages()))
-
 	splittedChatMessageList := &pb.ChatMessageList{
 		ChatMessages:         []*pb.ChatMessage{},
 	}
@@ -60,8 +55,6 @@ func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, li
 					Type:                 &posType,
 				},
 			})
-			fmt.Println("mimiron word: ", word)
-			fmt.Println("mimiron type: ", posType)
 		}
 
 		// 只返回具有有效分词的消息
