@@ -2,9 +2,11 @@ package serviceServer
 
 import (
 	"context"
+	"fmt"
 	"github.com/Diode222/Mimiron/jieba"
 	pb "github.com/Diode222/Mimiron/proto_gen"
 	"github.com/Diode222/Mimiron/utils"
+	"log"
 	"strings"
 	"sync"
 )
@@ -22,6 +24,9 @@ func NewWordSplitServer() *wordSplitServer {
 }
 
 func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, list *pb.ChatMessageList) (*pb.ChatMessageList, error) {
+
+	log.Println("mimiron GetWordSplittedMessageList, chatMessageList length: ", len(list.GetChatMessages()))
+
 	splittedChatMessageList := &pb.ChatMessageList{
 		ChatMessages:         []*pb.ChatMessage{},
 	}
@@ -36,7 +41,7 @@ func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, li
 
 		for _, wordAndPos := range wordAndPosList {
 			word := wordAndPos[0]
-			posType := pb.PartOfSpeech_UNKNOWN
+			var posType pb.PartOfSpeech_POSType
 			if strings.HasPrefix(wordAndPos[1], "n") {
 				posType = pb.PartOfSpeech_NOUN
 			} else if strings.HasPrefix(wordAndPos[1], "v") {
@@ -45,6 +50,8 @@ func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, li
 				posType = pb.PartOfSpeech_ADJECTIVE
 			} else if utils.StringContains([]string{"e", "f", "i", "j", "l"}, wordAndPos[1]) {
 				posType = pb.PartOfSpeech_PHRASE
+			} else {
+				posType = pb.PartOfSpeech_UNKNOWN
 			}
 
 			sourceChatMessage.WordAndPosList = append(sourceChatMessage.WordAndPosList, &pb.WordAndPos{
@@ -53,6 +60,8 @@ func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, li
 					Type:                 &posType,
 				},
 			})
+			fmt.Println("mimiron word: ", word)
+			fmt.Println("mimiron type: ", posType)
 		}
 
 		// 只返回具有有效分词的消息
