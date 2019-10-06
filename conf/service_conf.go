@@ -7,7 +7,7 @@ const (
 	//LISTEN_IP = "127.0.0.1"
 	//SERVICE_IP = "127.0.0.1"
 	SERVICE_PORT = 56666
-	SERVICE_NAME = "frigg_db_service"
+	SERVICE_NAME = "mimiron_algorithm_service"
 	TTL = 5
 
 	// 数据库服务

@@ -9,35 +9,31 @@ import (
 	"sync"
 )
 
-type splittedWordServer struct {}
+type wordSplitServer struct {}
 
-var serversplittedWord *splittedWordServer
-var serversplittedWordOnce sync.Once
+var serverWordSplit *wordSplitServer
+var serverWordSplitOnce sync.Once
 
-func NewSplittedWordServer() *splittedWordServer {
-	serversplittedWordOnce.Do(func() {
-		serversplittedWord = &splittedWordServer{}
+func NewWordSplitServer() *wordSplitServer {
+	serverWordSplitOnce.Do(func() {
+		serverWordSplit = &wordSplitServer{}
 	})
-	return serversplittedWord;
+	return serverWordSplit;
 }
 
-func (s *splittedWordServer) GetSplittedMessage(context context.Context, list *pb.ChatMessageList) (*pb.SplittedMessageList, error) {
+func (s *wordSplitServer) GetWordSplittedMessageList(context context.Context, list *pb.ChatMessageList) (*pb.ChatMessageList, error) {
+	splittedChatMessageList := &pb.ChatMessageList{
+		ChatMessages:         []*pb.ChatMessage{},
+	}
 	segmentor := jieba.GetJieba()
-	splittedMessageList := &pb.SplittedMessageList{}
-	chatMessages := list.GetChatMessages()
-	splittedMessages := []*pb.SplittedMessage{}
-	for _, chatMessage := range chatMessages {
-		wordAndPosList := segmentor.Cut(chatMessage.GetMessage())
+	sourceChatMessages := list.GetChatMessages()
+	for _, sourceChatMessage := range sourceChatMessages {
+		sourceChatMessage.WordAndPosList = []*pb.WordAndPos{}
+		wordAndPosList := segmentor.Cut(sourceChatMessage.GetMessage())
 		if len(wordAndPosList) <= 0 {
 			continue
 		}
 
-		splittedMessage := &pb.SplittedMessage{
-			WordAndPosList: []*pb.WordAndPos{},
-			Time:                 chatMessage.Time,
-			ChatPerson:           chatMessage.ChatPerson,
-			Message:              chatMessage.Message,
-		}
 		for _, wordAndPos := range wordAndPosList {
 			word := wordAndPos[0]
 			posType := pb.PartOfSpeech_UNKNOWN
@@ -51,7 +47,7 @@ func (s *splittedWordServer) GetSplittedMessage(context context.Context, list *p
 				posType = pb.PartOfSpeech_PHRASE
 			}
 
-			splittedMessage.WordAndPosList = append(splittedMessage.WordAndPosList, &pb.WordAndPos{
+			sourceChatMessage.WordAndPosList = append(sourceChatMessage.WordAndPosList, &pb.WordAndPos{
 				Word:                 &word,
 				Pos:                  &pb.PartOfSpeech{
 					Type:                 &posType,
@@ -59,10 +55,11 @@ func (s *splittedWordServer) GetSplittedMessage(context context.Context, list *p
 			})
 		}
 
-		if len(splittedMessage.WordAndPosList) > 0 {
-			splittedMessages = append(splittedMessages, splittedMessage)
+		// 只返回具有有效分词的消息
+		if len(sourceChatMessage.GetWordAndPosList()) > 0 {
+			splittedChatMessageList.ChatMessages = append(splittedChatMessageList.ChatMessages, sourceChatMessage)
 		}
 	}
-	splittedMessageList.SplittedMessages = splittedMessages
-	return splittedMessageList, nil
+
+	return splittedChatMessageList, nil
 }
