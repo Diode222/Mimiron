@@ -2,6 +2,8 @@ cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Diode222/etcd_service_discovery v0.0.0-20191005164048-37e25604ffae h1:H/R5aEsCtoTcxBkEFAeHPRsLOybc2uu7yAjLcvYJvBI=
 github.com/Diode222/etcd_service_discovery v0.0.0-20191005164048-37e25604ffae/go.mod h1:it6RAvFcpH5cMkXieI4cOciD1GQC8H+kHCT6RvYtPME=
+github.com/Diode222/etcd_service_discovery v0.0.0-20191006085726-279fff1e207d h1:zlhoog94K9Hluc9ZxPhTuf16geovADisB6H2req/2TU=
+github.com/Diode222/etcd_service_discovery v0.0.0-20191006085726-279fff1e207d/go.mod h1:it6RAvFcpH5cMkXieI4cOciD1GQC8H+kHCT6RvYtPME=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/coreos/etcd v3.3.15+incompatible h1:+9RjdC18gMxNQVvSiXvObLu29mOFmkgdsB4cRTlV+EE=
 github.com/coreos/etcd v3.3.15+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
